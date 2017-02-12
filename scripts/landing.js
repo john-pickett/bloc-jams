@@ -24,4 +24,12 @@ var animatePoints = function(points){
      }
 }
 
-animatePoints(pointsArray);
+//animatePoints(pointsArray);
+
+function forEach(points, callback) {
+    for (var i = 0; i < points.length; i++) {
+        callback(points[i]);
+    }
+}
+
+forEach(pointsArray, animatePoints);
