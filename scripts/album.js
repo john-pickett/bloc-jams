@@ -30,6 +30,22 @@
      ]
  };
 
+// Third Example Album
+ var albumWright = {
+     title: 'We\'re Flying',
+     artist: 'Orville and Frank',
+     label: 'AI',
+     year: '1903',
+     albumArtUrl: 'assets/images/album_covers/21.png',
+     songs: [
+         { title: 'Build an Airplane', duration: '1:07' },
+         { title: 'Let\'s Give It a Go', duration: '5:00' },
+         { title: 'Uh Oh, We\'re Crashing', duration: '3:29'},
+         { title: 'Let\'s Fix This Airplane', duration: '3:28' },
+         { title: 'Flight!', duration: '2:19'}
+     ]
+ };
+
 var createSongRow = function(songNumber, songName, songLength) {
      var template =
         '<tr class="album-view-song-item">'
@@ -68,3 +84,29 @@ var setCurrentAlbum = function(album) {
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
  };
+
+var art = document.getElementById('cover-art');
+art.addEventListener('click', nextCover);
+var j = 0;
+
+function nextCover(){
+    if (j === 0) {
+        console.log("j is 0");
+        setCurrentAlbum(albumMarconi);
+        j++;
+    } else if ( j === 1) {
+        console.log("j is 1");
+        setCurrentAlbum(albumWright);
+        j++; 
+    } else if ( j === 2) {
+        console.log("j is 2");
+        setCurrentAlbum(albumPicasso);
+        j++;
+    } else if ( j === 3) {
+        console.log("j is 3");
+        j = 0;
+        nextCover();
+    } else {
+        return "Error!";
+    }
+}
