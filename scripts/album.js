@@ -99,7 +99,7 @@ var clickHandler = function(targetElement) {
     if (currentlyPlayingSong === null) {
         songItem.innerHTML = pauseButtonTemplate;
         currentlyPlayingSong = songItem.getAttribute('data-song-number');
-    // if click is on currently playing song
+    // if click is on currently playing song?
     } else if (currentlyPlayingSong === songItem.getAttribute('data-song-number')) {
          songItem.innerHTML = playButtonTemplate;
          currentlyPlayingSong = null;
@@ -122,6 +122,7 @@ var currentlyPlayingSong = null;
  
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
+     
      songListContainer.addEventListener('mouseover', function(event) {
        if (event.target.parentElement.className === 'album-view-song-item') {      event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
            var songItem = getSongItem(event.target);
