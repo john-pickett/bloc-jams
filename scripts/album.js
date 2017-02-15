@@ -16,25 +16,31 @@ var createSongRow = function(songNumber, songName, songLength) {
 
 var clickHandler = function() {
     var songNumber = parseInt($(this).attr('data-song-number'));
+    console.log("clickHandler: songNumber is: " + songNumber);
     // song is playing. user clicks play on new song
     if (currentlyPlayingSongNumber !== null) {
+        console.log("#1");
         var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
     } 
     
-    // switch from Play -> Pause to show new song is playing
     if (currentlyPlayingSongNumber !== songNumber) {
+        // switch from Play -> Pause to show new song is playing
+        // this fires on first song selection click
+        console.log("#2");
         setSong(songNumber);
-        console.log(currentSoundFile);
         currentSoundFile.play();
         $(this).html(pauseButtonTemplate);
         updatePlayerBarSong();
-    // switch from Pause -> Play to pause currently playing song
     } else if (currentlyPlayingSongNumber === songNumber) {
         if (currentSoundFile.isPaused()) {
+            console.log("#3");
             $(this).html(pauseButtonTemplate);
             $('.main-controls .play-pause').html(playerBarPauseButton);
             currentSoundFile.play();
         } else {
+            // switch from Pause -> Play to pause currently playing song
+            console.log("#4");
+            currentSoundFile.pause();
             $(this).html(playButtonTemplate);
             $('.main-controls .play-pause').html(playerBarPlayButton);
         }
@@ -43,10 +49,12 @@ var clickHandler = function() {
     
 var onHover = function(event) {
     var songNumberCell = $(this).find('.song-item-number');
-    var songNumber = parseInt($(this).attr('data-song-number'));;
-
+    var songNumber = parseInt($(this).children("td").attr('data-song-number'));
+    
     if (songNumber !== currentlyPlayingSongNumber) {
         songNumberCell.html(playButtonTemplate);
+    } else {
+        songNumberCell.html(pauseButtonTemplate);
     }
 };
 
@@ -172,9 +180,8 @@ var setSong = function(songNumber) {
     }
     currentlyPlayingSongNumber = parseInt(songNumber);
     currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
-//    console.log("currentSongFromAlbum works: " + JSON.stringify(currentSongFromAlbum));
-    console.log(currentSongFromAlbum.audioUrl);
-    currentSoundFile = new buzz.sound(currentSongFromAlbum.audioURL, {
+//    var urlPath = currentSongFromAlbum.audioUrl;
+    currentSoundFile = new buzz.sound(currentSongFromAlbum.audioUrl, {
         formats: [ 'mp3' ],
         preload: true
     });
