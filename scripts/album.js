@@ -15,8 +15,7 @@ var createSongRow = function(songNumber, songName, songLength) {
  };
 
 var clickHandler = function() {
-    var songNumber = parseInt($(this).attr('data-song-number'));;
-    
+    var songNumber = parseInt($(this).attr('data-song-number'));
     // song is playing. user clicks play on new song
     if (currentlyPlayingSongNumber !== null) {
         var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
@@ -24,15 +23,21 @@ var clickHandler = function() {
     
     // switch from Play -> Pause to show new song is playing
     if (currentlyPlayingSongNumber !== songNumber) {
-         $(this).html(pauseButtonTemplate);
         setSong(songNumber);
+        console.log(currentSoundFile);
+        currentSoundFile.play();
+        $(this).html(pauseButtonTemplate);
         updatePlayerBarSong();
     // switch from Pause -> Play to pause currently playing song
     } else if (currentlyPlayingSongNumber === songNumber) {
-        $(this).html(playButtonTemplate);
-        $('.main-controls .play-pause').html(playerBarPlayButton);
-        currentlyPlayingSongNumber = null;
-        currentSongFromAlbum;
+        if (currentSoundFile.isPaused()) {
+            $(this).html(pauseButtonTemplate);
+            $('.main-controls .play-pause').html(playerBarPauseButton);
+            currentSoundFile.play();
+        } else {
+            $(this).html(playButtonTemplate);
+            $('.main-controls .play-pause').html(playerBarPlayButton);
+        }
      }
 };
     
@@ -105,7 +110,8 @@ var nextSong = function() {
     }
     
     // Set a new current song
-    setSong(songNumber);
+    setSong(currentSongIndex + 1);
+    currentSoundFile.play();
 
     // Update the Player Bar information
     $('.currently-playing .song-name').text(currentSongFromAlbum.title);
@@ -137,7 +143,8 @@ var previousSong = function() {
     }
     
     // Set new current song
-    setSong(songNumber);
+    setSong(currentSongIndex + 1);
+    currentSoundFile.play();
     
     // Update the Player Bar information
     $('.currently-playing .song-name').text(currentSongFromAlbum.title);
@@ -153,9 +160,26 @@ var previousSong = function() {
     $lastSongNumberCell.html(lastSongNumber);
 };
 
+var setVolume = function(volume){
+    if (currentSoundFile) {
+        currentSoundFile.setVolume(volume);
+    }
+};
+
 var setSong = function(songNumber) {
+    if (currentSoundFile) {
+        currentSoundFile.stop();
+    }
     currentlyPlayingSongNumber = parseInt(songNumber);
     currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+    console.log("currentSongFromAlbum works: " + JSON.stringify(currentSongFromAlbum));
+    console.log(currentSongFromAlbum.audioUrl);
+    currentSoundFile = new buzz.sound(currentSongFromAlbum.audioURL, {
+        formats: [ 'mp3' ],
+        preload: true
+    });
+    console.log(currentSoundFile);
+    setVolume(currentVolume);
 };
 
 var getSongNumberCell = function(number){
@@ -171,6 +195,8 @@ var playerBarPauseButton = '<span class="ion-pause"></span>';
 var currentlyPlayingSongNumber = null;
 var currentAlbum = null;
 var currentSongFromAlbum = null;
+var currentSoundFile = null;
+var currentVolume = 80;
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
  
