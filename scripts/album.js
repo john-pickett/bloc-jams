@@ -172,13 +172,12 @@ var setSong = function(songNumber) {
     }
     currentlyPlayingSongNumber = parseInt(songNumber);
     currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
-    console.log("currentSongFromAlbum works: " + JSON.stringify(currentSongFromAlbum));
+//    console.log("currentSongFromAlbum works: " + JSON.stringify(currentSongFromAlbum));
     console.log(currentSongFromAlbum.audioUrl);
     currentSoundFile = new buzz.sound(currentSongFromAlbum.audioURL, {
         formats: [ 'mp3' ],
         preload: true
     });
-    console.log(currentSoundFile);
     setVolume(currentVolume);
 };
 
