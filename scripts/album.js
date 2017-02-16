@@ -92,15 +92,38 @@ var setCurrentAlbum = function(album) {
      }
  };
 
+var setCurrentTimeInPlayerBar = function(currentTime){
+    var timer = filterTimeCode(currentSoundFile.getTime());
+    $('.current-time').text(timer);
+};
+
+var setTotalTimeInPlayerBar = function(totalTime) {
+    var timer = filterTimeCode(currentSoundFile.getDuration());
+    $('.total-time').text(timer);
+};
+
+var filterTimeCode = function(timeInSeconds){
+    var answer = Math.floor((timeInSeconds / 60)) + ":";
+    var seconds = Math.floor(timeInSeconds % 60);
+    if (seconds.toString().length < 2){
+      answer += "0" + Math.floor(timeInSeconds % 60);
+    } else {
+      answer += Math.floor(timeInSeconds % 60);
+    }
+    return answer;
+};
+
 var updateSeekBarWhileSongPlays = function() {
      if (currentSoundFile) {
-         // #10
+         setTotalTimeInPlayerBar();
          currentSoundFile.bind('timeupdate', function(event) {
              // #11
              var seekBarFillRatio = this.getTime() / this.getDuration();
              var $seekBar = $('.seek-control .seek-bar');
  
              updateSeekPercentage($seekBar, seekBarFillRatio);
+             setCurrentTimeInPlayerBar(this.getTime());
+             setTotalTimeInPlayerBar(this.getDuration());
          });
      }
  };
