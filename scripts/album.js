@@ -103,6 +103,7 @@ var setTotalTimeInPlayerBar = function(totalTime) {
 };
 
 var filterTimeCode = function(timeInSeconds){
+
     var answer = Math.floor((timeInSeconds / 60)) + ":";
     var seconds = Math.floor(timeInSeconds % 60);
     if (seconds.toString().length < 2){
@@ -110,7 +111,9 @@ var filterTimeCode = function(timeInSeconds){
     } else {
       answer += Math.floor(timeInSeconds % 60);
     }
-    return answer;
+    if (typeof timeInSeconds === "number") {
+        return answer;
+    }
 };
 
 var updateSeekBarWhileSongPlays = function() {
@@ -138,6 +141,8 @@ var updateSeekPercentage = function($seekBar, seekBarFillRatio) {
     var percentageString = offsetXPercent + '%';
     $seekBar.find('.fill').width(percentageString);
     $seekBar.find('.thumb').css({left: percentageString});
+    setCurrentTimeInPlayerBar(currentSoundFile.getTime());
+    console.log(currentSoundFile.getTime());
  };
 
 var setupSeekBars = function() {
@@ -161,11 +166,13 @@ var setupSeekBars = function() {
      });
     
     $seekBars.find('.thumb').mousedown(function(event) {
+        
          // #8
          var $seekBar = $(this).parent();
  
          // #9
          $(document).bind('mousemove.thumb', function(event){
+             console.log("hey");
              var offsetX = event.pageX - $seekBar.offset().left;
              var barWidth = $seekBar.width();
              var seekBarFillRatio = offsetX / barWidth;
